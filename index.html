@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Búsqueda del Tesoro para Viki</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilo para la fuente del título principal */
+        .font-pacifico {
+            font-family: 'Pacifico', cursive;
+        }
+        /* Estilo para el cuerpo del texto */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Transición suave entre páginas */
+        .page {
+            transition: opacity 0.5s ease-in-out;
+        }
+        /* Animación de "sacudida" para elecciones incorrectas */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Contenedor principal que ocupa toda la pantalla -->
+    <div class="w-full h-screen">
+
+        <!-- Página 1: Bienvenida -->
+        <div id="page1" class="page w-full h-full flex flex-col justify-center items-center text-center p-8 bg-pink-200">
+            <a href="#" onclick="showPage('page2'); return false;" class="transform hover:scale-105 transition-transform">
+                <h1 class="font-pacifico text-6xl md:text-8xl text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">Bienvenida Viki</h1>
+            </a>
+            <p class="mt-8 text-lg md:text-xl max-w-2xl text-pink-800">
+                Esto es una búsqueda del tesoro hacia tu regalo. Vas a tener que ir encontrando el objeto que te lleve a la próxima pantalla y así hasta llegar a tu premio.
+            </p>
+            <p class="mt-4 text-sm text-pink-700">(Haz clic en el saludo para comenzar)</p>
+        </div>
+
+        <!-- Página 2: Primera Pista con 4 regalos -->
+        <div id="page2" class="page hidden w-full h-full flex flex-col justify-center items-center text-center p-8 bg-blue-200">
+            <div class="bg-white/70 backdrop-blur-sm rounded-xl p-8 shadow-lg max-w-3xl">
+                <h2 class="text-3xl font-bold text-blue-800 mb-4">Primera Pista</h2>
+                <p class="text-xl text-blue-700 mb-6">
+                    "De estos cuatro presentes, solo uno es el correcto. Elige con sabiduría para seguir tu trayecto."
+                </p>
+                <div class="flex justify-center items-center gap-4 md:gap-8 mt-8">
+                    <button onclick="handleWrongChoice(this)" class="text-6xl transform hover:scale-125 transition-transform duration-300">🎁</button>
+                    <button onclick="showPage('page3')" class="text-6xl transform hover:scale-125 transition-transform duration-300">🎁</button>
+                    <button onclick="handleWrongChoice(this)" class="text-6xl transform hover:scale-125 transition-transform duration-300">🎁</button>
+                    <button onclick="handleWrongChoice(this)" class="text-6xl transform hover:scale-125 transition-transform duration-300">🎁</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Página 3: Segunda Pista con íconos desordenados -->
+        <div id="page3" class="page hidden w-full h-full flex flex-col justify-center items-center text-center p-8 bg-green-200">
+            <div class="bg-white/70 backdrop-blur-sm rounded-xl p-8 shadow-lg max-w-3xl">
+                <h2 class="text-3xl font-bold text-green-800 mb-4">Segunda Pista</h2>
+                <p class="text-xl text-green-700 mb-6">
+                    "Entre el caos de formas, una joya se esconde. Búscala con paciencia, es la llave que responde."
+                </p>
+                <div class="relative w-full max-w-md h-64 bg-green-100/50 p-4 rounded-lg flex flex-wrap items-center justify-center gap-4 overflow-hidden">
+                    <span onclick="handleWrongChoice(this)" class="text-4xl cursor-pointer transform hover:scale-125 transition-transform">⭐</span>
+                    <span onclick="handleWrongChoice(this)" class="text-3xl cursor-pointer transform hover:scale-125 transition-transform">🎈</span>
+                    <span onclick="handleWrongChoice(this)" class="text-4xl cursor-pointer transform hover:scale-125 transition-transform">❤️</span>
+                    <span onclick="showPage('page4')" class="text-xl cursor-pointer transform hover:scale-150 transition-transform" title="¡Este es!">💎</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer transform hover:scale-125 transition-transform">🍕</span>
+                    <span onclick="handleWrongChoice(this)" class="text-4xl cursor-pointer transform hover:scale-125 transition-transform">🚀</span>
+                    <span onclick="handleWrongChoice(this)" class="text-3xl cursor-pointer transform hover:scale-125 transition-transform">☀️</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Página 4: Tercera Pista estilo "Encuentra a Wally" -->
+        <div id="page4" class="page hidden w-full h-full flex flex-col justify-center items-center text-center p-8 bg-purple-200">
+            <div class="bg-white/70 backdrop-blur-sm rounded-xl p-8 shadow-lg max-w-5xl">
+                <h2 class="text-3xl font-bold text-purple-800 mb-4">¡El Reto Final!</h2>
+                <p class="text-xl text-purple-700 mb-6">
+                    "Estás muy cerca. La última pista es un momento de relax y cuidado personal. ¡Encuéntrala entre el desorden!"
+                </p>
+                <div class="w-full h-96 bg-purple-100/50 p-4 rounded-lg flex flex-wrap items-center justify-center gap-x-2 gap-y-1 overflow-y-auto leading-none">
+                    <!-- Iconos incorrectos x10 -->
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🍓</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🚗</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🥨</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🌵</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🌙</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🎉</span>
+                    <span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🔑</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🐙</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🦋</span>
+                    <span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🕹️</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🥐</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🐢</span>
+                    <span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">👻</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🎲</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">💡</span>
+                    <span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🎻</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🐿️</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🍩</span>
+                    <span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🌲</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🌍</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">📚</span>
+                    <span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🎨</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🎤</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🚀</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🤖</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🍕</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">⭐</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🍎</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">⚽</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🎈</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🐧</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">❤️</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🎸</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">☀️</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🦊</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">👑</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">💍</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🐳</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🍀</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🍁</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🍄</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🌹</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🌻</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🌵</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">💎</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">💡</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">💰</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">✉️</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">📦</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">📎</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">📌</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">✂️</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🔨</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🏹</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🛡️</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🕰️</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🎈</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🎊</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🎏</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🎀</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🍓</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🚗</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🥨</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🌵</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🌙</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🎉</span>
+                    <span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🔑</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🐙</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🦋</span>
+                    <span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🕹️</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🥐</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🐢</span>
+                    <span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">👻</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🎲</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">💡</span>
+                    <span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🎻</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🐿️</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🍩</span>
+                    <span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🌲</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🌍</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">📚</span>
+                    <span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🎨</span><span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🎤</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🚀</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🤖</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🍕</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">⭐</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🍎</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">⚽</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🎈</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🐧</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">❤️</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🎸</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">☀️</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🦊</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">👑</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">💍</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🐳</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🍀</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🍁</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🍄</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🌹</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🌻</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🌵</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">💎</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">💡</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">💰</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">✉️</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">📦</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">📎</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">📌</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">✂️</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🔨</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🏹</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🛡️</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🕰️</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🎈</span>
+                    <span onclick="showPage('page5')" class="text-2xl cursor-pointer transform hover:scale-150 transition-transform" title="¡Este es!">🧖‍♀️</span>
+                    <span onclick="handleWrongChoice(this)" class="text-2xl cursor-pointer hover:scale-125 transition-transform">🎊</span><span onclick="handleWrongChoice(this)" class="text-xl cursor-pointer hover:scale-125 transition-transform">🎏</span><span onclick="handleWrongChoice(this)" class="text-lg cursor-pointer hover:scale-125 transition-transform">🎀</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página 5: El Premio Final -->
+        <div id="page5" class="page hidden w-full h-full flex flex-col justify-center items-center text-center p-8 bg-yellow-200">
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-10 shadow-xl text-center">
+                 <span onclick="showPage('page6')" class="text-7xl cursor-pointer transform hover:scale-110 transition-transform duration-300" title="¿Hay algo más?">🏆</span>
+                <h1 class="font-pacifico text-5xl md:text-7xl text-yellow-600 mt-4" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">¡Felicidades!</h1>
+                <p class="mt-6 text-xl md:text-2xl text-yellow-800">
+                    ¡Has completado la búsqueda y encontrado tu tesoro!
+                </p>
+                <div class="mt-6 bg-yellow-300 border-2 border-dashed border-yellow-500 rounded-lg p-4">
+                    <p class="text-lg font-bold text-yellow-900">Tu regalo es: Una noche en el Boden del 10/08 al 11/08</p>
+                </div>
+                 <button onclick="showPage('page1')" class="mt-8 bg-pink-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-pink-600 transition-colors">
+                    Volver a empezar
+                </button>
+            </div>
+        </div>
+
+        <!-- Página 6: Premio Secreto -->
+        <div id="page6" class="page hidden w-full h-full flex flex-col justify-center items-center text-center p-8 bg-amber-200">
+            <div class="bg-white/70 backdrop-blur-sm rounded-xl p-10 shadow-xl text-center">
+                <h1 class="font-pacifico text-5xl md:text-7xl text-amber-800" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">Premio secreto desbloqueado</h1>
+                <p class="mt-6 text-8xl">
+                    🍫
+                </p>
+                 <button onclick="showPage('page1')" class="mt-8 bg-pink-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-pink-600 transition-colors">
+                    Volver a empezar
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Función para mostrar una página y ocultar las demás
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.add('opacity-0');
+                setTimeout(() => {
+                    if (page.id !== pageId) {
+                        page.classList.add('hidden');
+                    }
+                }, 500);
+            });
+
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                setTimeout(() => {
+                    targetPage.classList.remove('opacity-0');
+                }, 10);
+            }
+        }
+
+        // Función para manejar una elección incorrecta
+        function handleWrongChoice(element) {
+            element.classList.add('shake');
+            setTimeout(() => {
+                element.classList.remove('shake');
+            }, 500);
+        }
+
+        // Asegurarse de que la primera página sea visible al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('page1');
+        });
+    </script>
+</body>
+</html>
